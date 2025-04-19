@@ -20,7 +20,7 @@ removerTarefa ident tarefas
 marcarConcluída :: Int -> [Tarefa] -> Either String [Tarefa]
 marcarConcluída ident tarefas 
     |not (existeId ident tarefas) = Left "Erro -> Tarefa não existe!!"
-    |otherwise (map atualizar tarefas)
+    |otherwise = (map atualizar tarefas)
     where
       atualizar t 
         |idTarefa t == ident = t {status = Concluída}

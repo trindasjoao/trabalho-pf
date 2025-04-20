@@ -63,4 +63,30 @@ calcularDiasRestantes t hoje = case prazo t of
     -- Se a tarefa não tem prazo (Nothing), retorna Nothing, indicando que não é possível calcular os dias restantes
     Nothing -> Nothing
 
+-- Retorna todas as tarefas que contêm uma tag específica
+filtrarPorTag :: String -> [Tarefa] -> [Tarefa]
+filtrarPorTag tag tarefas =
+  filter (\t -> tag `elem` tags t) tarefas -- Verifica se a tag está presente na lista de tags da tarefa
+
+
+-- Gera uma lista de tags com suas frequências de uso
+nuvemDeTags :: [Tarefa] -> [(String, Int)]
+nuvemDeTags tarefas =
+  let todasAsTags = concatMap tags tarefas -- Junta todas as listas de tags em uma só
+  in map (\tg -> (head tg, length tg)) . group . sort $ todasAsTags -- Agrupa e conta as repetições de cada tag
+
+
+-- Salva a lista de tarefas em um arquivo no formato texto
+salvarEmArquivo :: FilePath -> [Tarefa] -> IO ()
+salvarEmArquivo caminho tarefas = do
+  let conteudo = unlines (map show tarefas) -- Converte a lista de tarefas para string com quebras de linha
+  writeFile caminho conteudo -- Escreve o conteúdo no arquivo
+
+
+-- Carrega a lista de tarefas de um arquivo texto
+carregarDeArquivo :: FilePath -> IO [Tarefa]
+carregarDeArquivo caminho = do
+  conteudo <- readFile caminho -- Lê o conteúdo do arquivo
+  return (map read (lines conteudo)) -- Converte cada linha em uma Tarefa
+
 

@@ -40,4 +40,4 @@ ordenarPorPrioridade tarefas =
     in altas ++ medias ++ baixas
 
 filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa] 
-filtrarPorStatus sta tarefas = [t | t <- tarefas, status t = stat] //mesma lógica da função que lista por categoria 
+filtrarPorStatus stat tarefas = [t | t <- tarefas, status t = stat] //mesma lógica da função que lista por categoria 

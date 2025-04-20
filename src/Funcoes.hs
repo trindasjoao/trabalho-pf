@@ -25,3 +25,19 @@ marcarConcluída ident tarefas
       atualizar t 
         |idTarefa t == ident = t {status = Concluída}
         |otherwise = t
+
+listarPorCategoria :: Categoria -> [Tarefa] -> [Tarefa]
+listarPorCategoria cate tarefas = [t | t <- tarefas, categoria t == cate] //t é a tarefa. Percorre cada t em um conjunto de tarefas, e só inclui na nova lista os t que satisfazem a condição, ou seja, cuja categoria seja igual a cat
+
+listarPorPrioridade :: Prioridade -> [Tarefa] -> [Tarefa]
+listarPorPrioridade prio tarefas = [t | t <- tarefas, prioridade t == prio] //mesma lógica da função que lista por categoria.
+
+ordenarPorPrioridade :: [Tarefa] -> [Tarefa] 
+ordenarPorPrioridade tarefas = 
+    let altas  = [t | t <- tarefas, prioridade == Alta] //separa as tarefas em 3 lista, e depois concatena elas
+        medias = [t | t <- tarefas, prioridade == Media]
+        baixas = [t | t <- tarefas, prioridade == Baixa]
+    in altas ++ medias ++ baixas
+
+filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa] 
+filtrarPorStatus sta tarefas = [t | t <- tarefas, status t = stat] //mesma lógica da função que lista por categoria 

@@ -41,3 +41,26 @@ ordenarPorPrioridade tarefas =
 
 filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa] 
 filtrarPorStatus stat tarefas = [t | t <- tarefas, status t = stat] //mesma lógica da função que lista por categoria 
+
+-- A função recebe uma lista de tarefas, a data atual e retorna uma lista de tarefas que estão atrasadas (com o prazo expirado).
+verificarAtrasos :: [Tarefa] -> Day -> [Tarefa]
+verificarAtrasos tarefas hoje = filter (\t -> case prazo t of
+    -- Verifica se a tarefa tem prazo (Just d)
+    Just d -> 
+        -- Se o prazo da tarefa for antes da data atual e o status não for Concluída, mantém a tarefa na lista
+        d < hoje && status t /= Concluída
+    -- Se a tarefa não tem prazo (Nothing), não considera a tarefa atrasada
+    Nothing -> False) tarefas
+
+calcularDiasRestantes :: Tarefa -> Day -> Maybe Int
+calcularDiasRestantes t hoje = case prazo t of
+    -- Se a tarefa tem um prazo (Just d)
+    Just d -> 
+        -- Calcula a diferença de dias entre a data atual (hoje) e o prazo da tarefa (d)
+        -- A função diffDays retorna a quantidade de dias entre essas duas datas
+        -- O resultado será do tipo Maybe Int, que contém o número de dias restantes
+        Just (diffDays d hoje)
+    -- Se a tarefa não tem prazo (Nothing), retorna Nothing, indicando que não é possível calcular os dias restantes
+    Nothing -> Nothing
+
+

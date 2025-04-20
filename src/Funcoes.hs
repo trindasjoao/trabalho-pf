@@ -89,4 +89,11 @@ carregarDeArquivo caminho = do
   conteudo <- readFile caminho -- Lê o conteúdo do arquivo
   return (map read (lines conteudo)) -- Converte cada linha em uma Tarefa
 
+-- Filtra tarefas que contenham todas as tags fornecidas
+filtrarPorTags :: [String] -> [Tarefa] -> [Tarefa]
+filtrarPorTags ts tarefas = filter (\t -> all (`elem` tags t) ts) tarefas
+-- A função recebe uma lista de tags 'ts' e uma lista de tarefas
+-- Para cada tarefa, verifica se todas as tags da lista 'ts' estão presentes nas tags da tarefa (usando 'all')
+-- Apenas as tarefas que tiverem todas as tags são mantidas na lista final
+
 

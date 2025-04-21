@@ -43,6 +43,10 @@ ordenarPorPrioridade tarefas =
 filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa] 
 filtrarPorStatus stat tarefas = [t | t <- tarefas, status t == stat] --mesma lógica da função que lista por categoria 
 
+buscarPorPalavraChave :: String -> [Tarefa] -> [Tarefa]
+buscarPorPalavraChave palavra tarefas = [t | t <- tarefas, map toLower palavra `isInfixOf` map toLower (descricao t)] -- seguindo a lógica de compreensão de listas, percorre cada tarefa em um conjunto de tarefas, e entra na condição. toLower faz com que cada caractere da palavra passe a ser minúsculo para não ter conflito na hora de procurar pela palavra-chave. 
+-- isInfixOf verifica se a palavra está contida dentro da descrição, que também já foi passada para minúscula para não haver conflito
+
 verificarAtrasos :: [Tarefa] -> Day -> [Tarefa]
 verificarAtrasos tarefas hoje = filter atrasada tarefas
   where 

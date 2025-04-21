@@ -2,8 +2,10 @@ module Testes where
 
 import Tipos 
 import Funcoes 
-import Data.Time.Calendar (fromGregorian)
+import Persistencia
+import Data.Time.Calendar (Day, fromGregorian)
 import Test.QuickCheck 
+import qualified Data.Set as Set
 
 t1 = Tarefa 1 "Estudar Haskell" Pendente Alta Estudo (Just (fromGregorian 2025 04 20)) ["ufu", "haskell"]
 t2 = Tarefa 2 "Fazer compras" Concluída Media Pessoal (Just (fromGregorian 2025 04 21)) ["casa"]
@@ -104,3 +106,58 @@ testaNuvemDeTags = do
 testaGerarRelatorio :: IO ()
 testaGerarRelatorio = do
   putStrLn (gerarRelatorio listaTarefas)
+
+arquivoTeste :: FilePath
+arquivoTeste = "tarefas_teste.txt"
+
+testaSalvarEmArquivo :: IO ()
+testaSalvarEmArquivo = do
+  putStrLn "Salvando tarefas em arquivo..."
+  salvarEmArquivo "tarefas_teste.txt" listaTarefas
+  putStrLn "Arquivo salvo com sucesso!"
+
+testaCarregarDeArquivo :: IO ()
+testaCarregarDeArquivo = do
+  putStrLn "Carregando tarefas do arquivo..."
+  tarefas <- carregarDeArquivo "tarefas_teste.txt"
+  putStrLn "Tarefas carregadas:"
+  mapM_ print tarefas
+
+instance Arbitrary Status where
+  arbitrary = elements [Pendente, Concluída]
+
+instance Arbitrary Prioridade where
+  arbitrary = elements [Baixa, Media, Alta]
+
+instance Arbitrary Categoria where
+  arbitrary = elements [Estudo, Trabalho, Pessoal, Outro]
+
+instance Arbitrary Tarefa where
+  arbitrary = do
+    idTarefa <- arbitrary
+    descricao <- arbitrary
+    status <- arbitrary
+    prioridade <- arbitrary
+    categoria <- arbitrary
+    prazo <- frequency [(1, return Nothing), (3, Just <$> arbitrary)]
+    tags <- listOf arbitrary
+    return (Tarefa idTarefa descricao status prioridade categoria prazo tags)
+
+prop_adicionaTarefaAumentaLista :: Tarefa -> [Tarefa] -> Property
+prop_adicionaTarefaAumentaLista t ts =
+  Set.notMember (idTarefa t) (Set.fromList (map idTarefa ts)) ==>
+    case adicionaTarefa t ts of
+      Right novaLista -> length novaLista == length ts + 1
+      Left _          -> False
+
+rodarQuickCheck :: IO ()
+rodarQuickCheck = do
+  putStrLn "== Rodando QuickCheck em adicionarTarefa =="
+  quickCheck prop_adicionaTarefaAumentaLista
+
+instance Arbitrary Day where
+  arbitrary = fromGregorian
+    <$> choose (2020, 2030)  -- ano
+    <*> choose (1, 12)       -- mês
+    <*> choose (1, 28)       -- dia (mais seguro que 30 ou 31)
+

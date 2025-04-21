@@ -1,9 +1,9 @@
 module Main (main) where
 
 import Testes
-import Lib
 import Funcoes
 import Tipos
+import Persistencia
 
 main = do
   putStrLn "== Teste adicionar =="
@@ -27,14 +27,23 @@ main = do
   putStrLn "\n== Teste: verificar tarefas atrasadas =="
   testaVerificarAtrasos
 
-  putStrLn "== Teste: calcular dias restantes para a tarefa =="
+  putStrLn "\n== Teste: calcular dias restantes para a tarefa =="
   testaCalcularDiasRestantes
 
-  putStrLn "== Teste: filtrar tarefas por tag =="
+  putStrLn "\n== Teste: filtrar tarefas por tag =="
   testaFiltrarPorTag
   
-  putStrLn "== Teste: gerar nuvem de tags =="
+  putStrLn "\n== Teste: gerar nuvem de tags =="
   testaNuvemDeTags
 
-  putStrLn "== Teste: gerar relatório =="
+  putStrLn "\n== Teste: gerar relatório =="
   testaGerarRelatorio
+
+  putStrLn "\n== Teste: salvar tarefas em arquivo =="
+  testaSalvarEmArquivo
+
+  putStrLn "\n== Teste: carregar tarefas do arquivo =="
+  testaCarregarDeArquivo
+
+  putStrLn "\n== Rodando QuickCheck em adicionarTarefa =="
+  rodarQuickCheck

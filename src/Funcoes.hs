@@ -2,7 +2,8 @@ module Funcoes where
 
 import Tipos
 import Data.Time.Calendar (diffDays, Day, fromGregorian)
-import Data.List 
+import Data.List
+import Data.Char
 import Control.Arrow (ArrowChoice(right))
 
 existeId :: Int -> [Tarefa] -> Bool
@@ -57,7 +58,7 @@ verificarAtrasos tarefas hoje = filter atrasada tarefas
 calcularDiasRestantes :: Tarefa -> Day -> Maybe Int
 calcularDiasRestantes t hoje = case prazo t of
     Just d -> -- Se a tarefa tem um prazo (Just d)
-        Just (diffDays d hoje) -- Calcula a diferença de dias entre a data atual (hoje) e o prazo da tarefa (d), a função diffDays retorna a quantidade de dias entre essas duas datas, o resultado será do tipo Maybe Int, que contém o número de dias restantes
+        Just (fromInteger(diffDays d hoje)) -- Calcula a diferença de dias entre a data atual (hoje) e o prazo da tarefa (d), a função diffDays retorna a quantidade de dias entre essas duas datas, o resultado será do tipo Maybe Int, que contém o número de dias restantes
     Nothing -> Nothing -- Se a tarefa não tem prazo (Nothing), retorna Nothing, indicando que não é possível calcular os dias restantes
 
 -- Retorna todas as tarefas que contêm uma tag específica
@@ -73,24 +74,38 @@ nuvemDeTags tarefas =
   in map (\tg -> (head tg, length tg)) . group . sort $ todasAsTags -- Agrupa e conta as repetições de cada tag
 
 
--- Salva a lista de tarefas em um arquivo no formato texto
 salvarEmArquivo :: FilePath -> [Tarefa] -> IO ()
-salvarEmArquivo caminho tarefas = do
-  let conteudo = unlines (map show tarefas) -- Converte a lista de tarefas para string com quebras de linha
-  writeFile caminho conteudo -- Escreve o conteúdo no arquivo
+salvarEmArquivo caminho tarefas = writeFile caminho (unlines (map show tarefas))
 
 
--- Carrega a lista de tarefas de um arquivo texto
 carregarDeArquivo :: FilePath -> IO [Tarefa]
 carregarDeArquivo caminho = do
-  conteudo <- readFile caminho -- Lê o conteúdo do arquivo
-  return (map read (lines conteudo)) -- Converte cada linha em uma Tarefa
+  conteudo <- readFile caminho
+  let linhas = lines conteudo
+  let tarefas = map read linhas
+  return tarefas
 
--- Filtra tarefas que contenham todas as tags fornecidas
-filtrarPorTags :: [String] -> [Tarefa] -> [Tarefa]
-filtrarPorTags ts tarefas = filter (\t -> all (`elem` tags t) ts) tarefas
--- A função recebe uma lista de tags 'ts' e uma lista de tarefas
--- Para cada tarefa, verifica se todas as tags da lista 'ts' estão presentes nas tags da tarefa (usando 'all')
--- Apenas as tarefas que tiverem todas as tags são mantidas na lista final
+gerarRelatorio :: [Tarefa] -> String -- Função para gerar o relatório resumido
+gerarRelatorio tarefas = unlines [
+    "Relatório Resumido:",
+    "-------------------",
+    "Total de tarefas: " ++ show totalTarefas,
+    "Pendentes: " ++ show pendentes ++ " | Concluídas: " ++ show concluidas,
+    "Distribuição por categoria:",
+    "  Estudo: " ++ show estudo ++ " tarefa(s) (" ++ show (percentual estudo) ++ "%)",
+    "  Trabalho: " ++ show trabalho ++ " tarefa(s) (" ++ show (percentual trabalho) ++ "%)",
+    "  Pessoal: " ++ show pessoal ++ " tarefa(s) (" ++ show (percentual pessoal) ++ "%)",
+    "  Outro: " ++ show outro ++ " tarefa(s) (" ++ show (percentual outro) ++ "%)"
+  ]
+  where
+    totalTarefas = length tarefas  -- Contagem total de tarefas
 
+    pendentes = length [t | t <- tarefas, status t == Pendente]  -- Contagem de tarefas pendentes e concluídas
+    concluidas = length [t | t <- tarefas, status t == Concluída]
+    estudo = length [t | t <- tarefas, categoria t == Estudo]   -- Contagem de tarefas por categoria
+    trabalho = length [t | t <- tarefas, categoria t == Trabalho]
+    pessoal = length [t | t <- tarefas, categoria t == Pessoal]
+    outro = length [t | t <- tarefas, categoria t == Outro]
 
+    percentual :: Int -> Double  -- Função para calcular o percentual de tarefas por categoria
+    percentual count = (fromIntegral count / fromIntegral totalTarefas) * 100

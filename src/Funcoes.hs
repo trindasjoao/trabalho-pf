@@ -1,7 +1,8 @@
 module Funcoes where 
 
 import Tipos
-import Data.Time.Calendar (fromGregorian)
+import Data.Time.Calendar (diffDays, Day, fromGregorian)
+import Data.List 
 import Control.Arrow (ArrowChoice(right))
 
 existeId :: Int -> [Tarefa] -> Bool
@@ -20,7 +21,7 @@ removerTarefa ident tarefas
 marcarConcluída :: Int -> [Tarefa] -> Either String [Tarefa]
 marcarConcluída ident tarefas 
     |not (existeId ident tarefas) = Left "Erro -> Tarefa não existe!!"
-    |otherwise = (map atualizar tarefas)
+    |otherwise = Right(map atualizar tarefas)
     where
       atualizar t 
         |idTarefa t == ident = t {status = Concluída}
@@ -34,34 +35,26 @@ listarPorPrioridade prio tarefas = [t | t <- tarefas, prioridade t == prio] --me
 
 ordenarPorPrioridade :: [Tarefa] -> [Tarefa] 
 ordenarPorPrioridade tarefas = 
-    let altas  = [t | t <- tarefas, prioridade == Alta] --separa as tarefas em 3 lista, e depois concatena elas
-        medias = [t | t <- tarefas, prioridade == Media]
-        baixas = [t | t <- tarefas, prioridade == Baixa]
+    let altas  = [t | t <- tarefas, prioridade t == Alta] --separa as tarefas em 3 lista, e depois concatena elas
+        medias = [t | t <- tarefas, prioridade t == Media]
+        baixas = [t | t <- tarefas, prioridade t == Baixa]
     in altas ++ medias ++ baixas
 
 filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa] 
-filtrarPorStatus stat tarefas = [t | t <- tarefas, status t = stat] --mesma lógica da função que lista por categoria 
+filtrarPorStatus stat tarefas = [t | t <- tarefas, status t == stat] --mesma lógica da função que lista por categoria 
 
--- A função recebe uma lista de tarefas, a data atual e retorna uma lista de tarefas que estão atrasadas (com o prazo expirado).
 verificarAtrasos :: [Tarefa] -> Day -> [Tarefa]
-verificarAtrasos tarefas hoje = filter (\t -> case prazo t of
-    -- Verifica se a tarefa tem prazo (Just d)
-    Just d -> 
-        -- Se o prazo da tarefa for antes da data atual e o status não for Concluída, mantém a tarefa na lista
-        d < hoje && status t /= Concluída
-    -- Se a tarefa não tem prazo (Nothing), não considera a tarefa atrasada
-    Nothing -> False) tarefas
+verificarAtrasos tarefas hoje = filter atrasada tarefas
+  where 
+    atrasada t = case prazo t of 
+      Just d -> d < hoje && status t /= Concluída
+      Nothing -> False 
 
 calcularDiasRestantes :: Tarefa -> Day -> Maybe Int
 calcularDiasRestantes t hoje = case prazo t of
-    -- Se a tarefa tem um prazo (Just d)
-    Just d -> 
-        -- Calcula a diferença de dias entre a data atual (hoje) e o prazo da tarefa (d)
-        -- A função diffDays retorna a quantidade de dias entre essas duas datas
-        -- O resultado será do tipo Maybe Int, que contém o número de dias restantes
-        Just (diffDays d hoje)
-    -- Se a tarefa não tem prazo (Nothing), retorna Nothing, indicando que não é possível calcular os dias restantes
-    Nothing -> Nothing
+    Just d -> -- Se a tarefa tem um prazo (Just d)
+        Just (diffDays d hoje) -- Calcula a diferença de dias entre a data atual (hoje) e o prazo da tarefa (d), a função diffDays retorna a quantidade de dias entre essas duas datas, o resultado será do tipo Maybe Int, que contém o número de dias restantes
+    Nothing -> Nothing -- Se a tarefa não tem prazo (Nothing), retorna Nothing, indicando que não é possível calcular os dias restantes
 
 -- Retorna todas as tarefas que contêm uma tag específica
 filtrarPorTag :: String -> [Tarefa] -> [Tarefa]

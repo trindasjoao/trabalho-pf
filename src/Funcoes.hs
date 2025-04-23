@@ -2,9 +2,47 @@ module Funcoes where
 
 import Tipos
 import Data.Time.Calendar (diffDays, Day, fromGregorian)
-import Data.List
-import Data.Char
+import Data.List ( group, isInfixOf, sort )
+import Data.Char ( toLower )
 import Control.Arrow (ArrowChoice(right))
+
+buscarPorId :: Int -> [Tarefa] -> Maybe Tarefa
+buscarPorId ident = foldr (\t acc -> if idTarefa t == ident then Just t else acc) Nothing
+
+criarTarefa :: IO Tarefa
+criarTarefa = do
+  putStrLn "ID:"
+  hFlush stdout
+  idStr <- getLine
+  putStrLn "Descrição:"
+  hFlush stdout
+  desc <- getLine
+  putStrLn "Status (Pendente ou Concluida):"
+  hFlush stdout
+  stat <- getLine
+  putStrLn "Prioridade (Baixa, Media, Alta):"
+  hFlush stdout
+  prio <- getLine
+  hFlush stdout
+  putStrLn "Categoria (Estudos, Trabalho, Pessoal, Outro):"
+  hFlush stdout
+  cat <- getLine
+  putStrLn "Deseja adicionar prazo? (s/n)"
+  hFlush stdout
+  r <- getLine
+  prazo <- if r == "s"
+    then do
+      putStrLn "Digite o prazo (DD MM YYYY):"
+      hFlush stdout
+      d <- getLine
+      let [dia, m, y] = map read (words d)
+      return (Just (fromGregorian (fromIntegral y) m dia))
+    else return Nothing
+  putStrLn "Digite as tags separadas por espaço:"
+  hFlush stdout
+  tagStr <- getLine
+  let tagsLista = words tagStr
+  return (Tarefa (read idStr) desc (read stat) (read prio) (read cat) prazo tagsLista)
 
 existeId :: Int -> [Tarefa] -> Bool
 existeId ident xs = any (\x -> idTarefa x == ident) xs

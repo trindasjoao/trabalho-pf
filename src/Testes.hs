@@ -25,11 +25,12 @@ testaAdicionar = do
 
 testaRemover :: IO ()
 testaRemover = do
-  case removerTarefa t2 listaTarefas of
+  case removerTarefa (idTarefa t2) listaTarefas of
     Left erro -> putStrLn $ "Erro: " ++ erro
     Right lista -> do
       putStrLn "Tarefa removida com sucesso!"
       print lista
+
 
 testaMarcadaConcluida :: IO ()
 testaMarcadaConcluida = do

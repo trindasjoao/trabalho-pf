@@ -1,3 +1,4 @@
+Tarefa {idTarefa = 15, descricao = "Tarefa de Haskell", status = Concluída, prioridade = Media, categoria = Estudo, prazo = Just 2025-12-09, tags = ["estudo","haskell","dever","faculdade"]}
 Tarefa {idTarefa = 1, descricao = "Estudar Haskell", status = Pendente, prioridade = Alta, categoria = Estudo, prazo = Just 2025-04-20, tags = ["ufu","haskell"]}
 Tarefa {idTarefa = 2, descricao = "Fazer compras", status = Concluída, prioridade = Media, categoria = Pessoal, prazo = Just 2025-04-21, tags = ["casa"]}
 Tarefa {idTarefa = 3, descricao = "Finalizar projeto", status = Pendente, prioridade = Alta, categoria = Trabalho, prazo = Nothing, tags = ["dev","haskell"]}

@@ -14,10 +14,11 @@ adicionaTarefa ident tarefas
   |existeId (idTarefa ident) tarefas = Left "Erro -> tarefa já existe!!"
   |otherwise = Right (ident : tarefas)  
 
-removerTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa]
+removerTarefa :: Int -> [Tarefa] -> Either String [Tarefa]
 removerTarefa ident tarefas
-  |existeId (idTarefa ident) tarefas = Right (filter (\t -> idTarefa t /= idTarefa ident) tarefas)
-  |otherwise = Left "Erro -> Tarefa não existe!!!"
+  | existeId ident tarefas = Right (filter (\t -> idTarefa t /= ident) tarefas)
+  | otherwise = Left "Erro -> Tarefa não existe!!!"
+
 
 marcarConcluída :: Int -> [Tarefa] -> Either String [Tarefa]
 marcarConcluída ident tarefas 

@@ -11,27 +11,28 @@ import Text.Read (readMaybe)
 
 main :: IO ()
 main = do
-  putStrLn "Bem-vindo ao Tarefas (Programação Funcional)"
+  putStrLn "\n\t\t\tGERENCIADOR DE TAREFAS PF\n"
   menuInicial []
 
 menuInicial :: [Tarefa] -> IO ()
 menuInicial tarefas = do
-  putStrLn "\n========== MENU =========="
-  putStrLn "1. Adicionar tarefa"
-  putStrLn "2. Remover tarefa"
-  putStrLn "3. Marcar tarefa como concluída"
-  putStrLn "4. Listar tarefas por categoria"
-  putStrLn "5. Listar tarefas por prioridade"
-  putStrLn "6. Ordenar tarefas por prioridade"
-  putStrLn "7. Filtrar tarefas por status"
-  putStrLn "8. Buscar por palavra-chave"
-  putStrLn "9. Verificar tarefas atrasadas"
-  putStrLn "10. Filtrar por tag"
-  putStrLn "11. Gerar nuvem de tags"
-  putStrLn "12. Calcular dias restantes de uma tarefa"
-  putStrLn "13. Gerar relatório"
-  putStrLn "14. Salvar em arquivo"
-  putStrLn "15. Carregar de arquivo"
+  putStrLn "\t\t\t\tMENU\n"
+  putStr "1. Adicionar tarefa"
+  putStrLn "\t\t\t2. Remover tarefa"
+  putStr "3. Marcar tarefa como concluída"
+  putStrLn "\t\t4. Listar tarefas por categoria"
+  putStr "5. Listar tarefas por prioridade"
+  putStrLn "\t6. Ordenar tarefas por prioridade"
+  putStr "7. Filtrar tarefas por status"
+  putStrLn "\t\t8. Buscar por palavra-chave"
+  putStr "9. Verificar tarefas atrasadas"
+  putStrLn "\t\t10. Filtrar por tag"
+  putStr "11. Gerar nuvem de tags"
+  putStrLn "\t\t\t12. Calcular quantos dias faltam para uma tarefa"
+  putStr "13. Gerar relatório"
+  putStrLn "\t\t\t14. Salvar em arquivo"
+  putStr "15. Carregar de arquivo"
+  putStrLn "\t\t\t16. QuickCheck"
   putStrLn "0. Sair"
   putStr "Escolha uma opção: "
   hFlush stdout
@@ -113,8 +114,8 @@ executarOpcao opcao tarefas = case opcao of
     hoje <- fmap utctDay getCurrentTime
     case calcularDiasRestantes <$> (buscarPorId idt tarefas) <*> pure hoje of
       Just (Just dias) -> putStrLn ("Dias restantes: " ++ show dias)
-      Just Nothing -> putStrLn "Tarefa sem prazo definido."
-      Nothing -> putStrLn "Tarefa não encontrada."
+      Just Nothing -> putStrLn "Tarefa sem prazo definido!!!"
+      Nothing -> putStrLn "Tarefa não encontrada!!!"
     menuInicial tarefas
   "13" -> do
     putStrLn (gerarRelatorio tarefas)
@@ -124,15 +125,19 @@ executarOpcao opcao tarefas = case opcao of
     hFlush stdout
     arq <- getLine
     salvarEmArquivo arq tarefas
-    putStrLn "Tarefas salvas!"
+    putStrLn "Tarefas salvas!!!"
     menuInicial tarefas
   "15" -> do
-    putStrLn "Digite o nome do arquivo para carregar:"
+    putStrLn "Digite o nome do arquivo:"
     hFlush stdout
     arq <- getLine
     tarefasNovas <- carregarDeArquivo arq
-    putStrLn "Tarefas carregadas!"
+    putStrLn "Tarefas carregadas!!!"
     menuInicial tarefasNovas
+  "16" -> do
+    putStrLn "Rodando testes com QuickCheck..."
+    rodarQuickCheck
+    menuInicial tarefas  
   "0" -> putStrLn "Saindo..."
-  _ -> putStrLn "Opção inválida!" >> menuInicial tarefas
+  _ -> putStrLn "Opção inválida!!!" >> menuInicial tarefas
 

@@ -79,7 +79,7 @@ executarOpcao opcao tarefas = case opcao of
     mapM_ print (ordenarPorPrioridade tarefas)
     menuInicial tarefas
   "7" -> do
-    putStrLn "Digite o status (Pendente ou Concluida):"
+    putStrLn "Digite o status (Pendente ou Concluída):"
     hFlush stdout
     s <- getLine
     let stat = read s :: Status

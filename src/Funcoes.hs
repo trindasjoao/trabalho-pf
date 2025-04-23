@@ -5,9 +5,13 @@ import Data.Time.Calendar (diffDays, Day, fromGregorian)
 import Data.List ( group, isInfixOf, sort )
 import Data.Char ( toLower )
 import Control.Arrow (ArrowChoice(right))
+import System.IO ( hFlush, stdout )
 
 buscarPorId :: Int -> [Tarefa] -> Maybe Tarefa
-buscarPorId ident = foldr (\t acc -> if idTarefa t == ident then Just t else acc) Nothing
+buscarPorId _ [] = Nothing
+buscarPorId ident (t:ts)
+  | idTarefa t == ident = Just t
+  | otherwise           = buscarPorId ident ts
 
 criarTarefa :: IO Tarefa
 criarTarefa = do
@@ -17,14 +21,14 @@ criarTarefa = do
   putStrLn "Descrição:"
   hFlush stdout
   desc <- getLine
-  putStrLn "Status (Pendente ou Concluida):"
+  putStrLn "Status (Pendente ou Concluída):"
   hFlush stdout
   stat <- getLine
   putStrLn "Prioridade (Baixa, Media, Alta):"
   hFlush stdout
   prio <- getLine
   hFlush stdout
-  putStrLn "Categoria (Estudos, Trabalho, Pessoal, Outro):"
+  putStrLn "Categoria (Estudo, Trabalho, Pessoal, Outro):"
   hFlush stdout
   cat <- getLine
   putStrLn "Deseja adicionar prazo? (s/n)"

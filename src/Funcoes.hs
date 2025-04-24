@@ -5,7 +5,7 @@ import Data.Time.Calendar (diffDays, Day, fromGregorian)
 import Data.List ( group, isInfixOf, sort )
 import Data.Char ( toLower )
 import Control.Arrow (ArrowChoice(right))
-import System.IO ( hFlush, stdout )
+import System.IO (stdout, hSetBuffering, BufferMode(NoBuffering)) --resolve problema do "buffer"
 
 buscarPorId :: Int -> [Tarefa] -> Maybe Tarefa
 buscarPorId _ [] = Nothing
@@ -15,35 +15,27 @@ buscarPorId ident (t:ts)
 
 criarTarefa :: IO Tarefa
 criarTarefa = do
+  hSetBuffering stdout NoBuffering
   putStrLn "ID:"
-  hFlush stdout
   idStr <- getLine
   putStrLn "Descrição:"
-  hFlush stdout
   desc <- getLine
   putStrLn "Status (Pendente ou Concluída):"
-  hFlush stdout
   stat <- getLine
   putStrLn "Prioridade (Baixa, Media, Alta):"
-  hFlush stdout
   prio <- getLine
-  hFlush stdout
   putStrLn "Categoria (Estudo, Trabalho, Pessoal, Outro):"
-  hFlush stdout
   cat <- getLine
   putStrLn "Deseja adicionar prazo? (s/n)"
-  hFlush stdout
   r <- getLine
   prazo <- if r == "s"
     then do
       putStrLn "Digite o prazo (DD MM YYYY):"
-      hFlush stdout
       d <- getLine
       let [dia, m, y] = map read (words d)
       return (Just (fromGregorian (fromIntegral y) m dia))
     else return Nothing
   putStrLn "Digite as tags separadas por espaço:"
-  hFlush stdout
   tagStr <- getLine
   let tagsLista = words tagStr
   return (Tarefa (read idStr) desc (read stat) (read prio) (read cat) prazo tagsLista)

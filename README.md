@@ -4,15 +4,15 @@ Projeto realizado em grupo da matéria Programação Funcional, cujo objetivo er
 
 ## Funcionalidades do projeto
 
--> Adicionar, remover e listar tarefas;
--> Marcar tarefas como concluídas;
--> Filtrar tarefas por status, categoria, prioridade e tags;
--> Buscar;
--> Verificar prazos e atrasos;
--> Salvar e carregar arquivos de texto;
--> Gerar um relatório geral de tarefas;
--> Menu interativo
--> Teste com QuickCheck
+-> Adicionar, remover e listar tarefas; <br>
+-> Marcar tarefas como concluídas;<br>
+-> Filtrar tarefas por status, categoria, prioridade e tags;<br>
+-> Buscar;<br>
+-> Verificar prazos e atrasos;<br>
+-> Salvar e carregar arquivos de texto;<br>
+-> Gerar um relatório geral de tarefas;<br>
+-> Menu interativo<br>
+-> Teste com QuickCheck<br>
 
 ## Estrutura do Projeto 
 
@@ -46,6 +46,8 @@ stack build
 stack run
 
 ```
+
+Após isso feito, inicie o programa e crie tarefas com a opção do menu 1, a maioria das funções necessita que as tarefas sejam criados. Caso o usuário prefira, neste arquivo temos um arquivo .txt já preparado. Você deverá iniciar o programa (como indicado acima) e usar a opção 15 para carregar o arquivo desejado só inserindo seu nome. Após carregado a maioria das funções carregarão normalmente. Aproveite :) 
 
 ## Autores 
     João Pedro Trindade Melo - 12411BCC084 

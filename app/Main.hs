@@ -8,9 +8,11 @@ import Funcoes
 import Persistencia
 import Testes
 import Text.Read (readMaybe) --leitura SEGURA de strings para tipos como Int
+import System.IO (stdout, hSetBuffering, BufferMode(NoBuffering)) --resolve problema do "buffer"
 
 main :: IO ()
 main = do
+  hSetBuffering stdout NoBuffering
   putStrLn "\n\t\t\tGERENCIADOR DE TAREFAS PF\n"
   menuInicial []
 
@@ -35,7 +37,6 @@ menuInicial tarefas = do
   putStrLn "\t\t\t16. QuickCheck"
   putStrLn "0. Sair"
   putStr "Escolha uma opção: "
-  hFlush stdout
   opcao <- getLine
   executarOpcao opcao tarefas
 
@@ -46,9 +47,8 @@ executarOpcao opcao tarefas = case opcao of
     menuInicial (nova : tarefas)
   "2" -> do
     putStrLn "Digite o ID da tarefa a remover:"
-    hFlush stdout
     idStr <- getLine
-    case readMaybe idStr of
+    case readMaybe idStr of --readMaybe converte de String para Int
       Just idt ->
         case removerTarefa idt tarefas of
           Left err      -> putStrLn err >> menuInicial tarefas
@@ -56,7 +56,6 @@ executarOpcao opcao tarefas = case opcao of
       Nothing -> putStrLn "ID inválido!" >> menuInicial tarefas
   "3" -> do
     putStrLn "Digite o ID da tarefa a marcar como concluída:"
-    hFlush stdout
     idStr <- getLine
     let idt = read idStr
     case marcarConcluída idt tarefas of
@@ -64,14 +63,12 @@ executarOpcao opcao tarefas = case opcao of
       Right novaLista -> menuInicial novaLista
   "4" -> do
     putStrLn "Digite a categoria (Estudo, Trabalho, Pessoal, Outro):"
-    hFlush stdout
     cat <- getLine
     let categoriaSelecionada = read cat :: Categoria
-    mapM_ print (listarPorCategoria categoriaSelecionada tarefas)
+    mapM_ print (listarPorCategoria categoriaSelecionada tarefas) --executa todas as ações uma por uma e ignora os retornos
     menuInicial tarefas
   "5" -> do
     putStrLn "Digite a prioridade (Baixa, Media, Alta):"
-    hFlush stdout
     p <- getLine
     let prio = read p :: Prioridade
     mapM_ print (listarPorPrioridade prio tarefas)
@@ -81,14 +78,12 @@ executarOpcao opcao tarefas = case opcao of
     menuInicial tarefas
   "7" -> do
     putStrLn "Digite o status (Pendente ou Concluída):"
-    hFlush stdout
     s <- getLine
     let stat = read s :: Status
     mapM_ print (filtrarPorStatus stat tarefas)
     menuInicial tarefas
   "8" -> do
     putStrLn "Digite a palavra-chave:"
-    hFlush stdout
     palavra <- getLine
     mapM_ print (buscarPorPalavraChave palavra tarefas)
     menuInicial tarefas
@@ -98,7 +93,6 @@ executarOpcao opcao tarefas = case opcao of
     menuInicial tarefas
   "10" -> do
     putStrLn "Digite a tag:"
-    hFlush stdout
     tag <- getLine
     mapM_ print (filtrarPorTag tag tarefas)
     menuInicial tarefas
@@ -108,10 +102,9 @@ executarOpcao opcao tarefas = case opcao of
     menuInicial tarefas
   "12" -> do
     putStrLn "Digite o ID da tarefa:"
-    hFlush stdout
     idStr <- getLine
-    let idt = read idStr
-    hoje <- fmap utctDay getCurrentTime
+    let idt = read idStr --converte para string o int
+    hoje <- fmap utctDay getCurrentTime --pega o dia e ignora o horário
     case calcularDiasRestantes <$> (buscarPorId idt tarefas) <*> pure hoje of
       Just (Just dias) -> putStrLn ("Dias restantes: " ++ show dias)
       Just Nothing -> putStrLn "Tarefa sem prazo definido!!!"
@@ -122,14 +115,12 @@ executarOpcao opcao tarefas = case opcao of
     menuInicial tarefas
   "14" -> do
     putStrLn "Digite o nome do arquivo para salvar:"
-    hFlush stdout
     arq <- getLine
     salvarEmArquivo arq tarefas
     putStrLn "Tarefas salvas!!!"
     menuInicial tarefas
   "15" -> do
     putStrLn "Digite o nome do arquivo:"
-    hFlush stdout
     arq <- getLine
     tarefasNovas <- carregarDeArquivo arq
     putStrLn "Tarefas carregadas!!!"

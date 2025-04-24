@@ -47,7 +47,7 @@ stack run
 
 ```
 
-Após isso feito, inicie o programa e crie tarefas com a opção do menu 1, a maioria das funções necessita que as tarefas sejam criados. Caso o usuário prefira, neste arquivo temos um arquivo .txt já preparado. Você deverá iniciar o programa (como indicado acima) e usar a opção 15 para carregar o arquivo desejado só inserindo seu nome. Após carregado a maioria das funções carregarão normalmente. Aproveite :) 
+Após isso feito, inicie o programa e crie tarefas com a opção do menu 1, a maioria das funções necessitam que as tarefas sejam criadas. Caso o usuário prefira, neste arquivo tem um arquivo .txt já preparado. Você deverá iniciar o programa (como indicado acima) e usar a opção 15 para carregar o arquivo desejado só inserindo seu nome. Após carregado a maioria das funções carregarão normalmente. Aproveite :) 
 
 ## Autores 
     João Pedro Trindade Melo - 12411BCC084 

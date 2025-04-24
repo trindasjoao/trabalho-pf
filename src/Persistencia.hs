@@ -1,7 +1,7 @@
 module Persistencia where 
 
 import Tipos
-import Text.Read(readMaybe)
+import Text.Read(readMaybe) --converte uma String para um outro tipo de forma segura
 
 salvarEmArquivo :: FilePath -> [Tarefa] -> IO ()
 salvarEmArquivo caminho tarefas = writeFile caminho (unlines (map show tarefas))

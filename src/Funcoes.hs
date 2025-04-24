@@ -1,19 +1,19 @@
 module Funcoes where 
 
 import Tipos
-import Data.Time.Calendar (diffDays, Day, fromGregorian)
-import Data.List ( group, isInfixOf, sort )
-import Data.Char ( toLower )
+import Data.Time.Calendar (diffDays, Day, fromGregorian) --Manipular datas
+import Data.List ( group, isInfixOf, sort ) --Manipulação de listas
+import Data.Char ( toLower ) --Letra maiúscula e minúscula
 import Control.Arrow (ArrowChoice(right))
 import System.IO (stdout, hSetBuffering, BufferMode(NoBuffering)) --resolve problema do "buffer"
 
-buscarPorId :: Int -> [Tarefa] -> Maybe Tarefa
+buscarPorId :: Int -> [Tarefa] -> Maybe Tarefa --Realiza uma busca pelo ID
 buscarPorId _ [] = Nothing
 buscarPorId ident (t:ts)
   | idTarefa t == ident = Just t
   | otherwise           = buscarPorId ident ts
 
-criarTarefa :: IO Tarefa
+criarTarefa :: IO Tarefa --Função de entrada para criação de tarefa
 criarTarefa = do
   hSetBuffering stdout NoBuffering
   putStrLn "ID:"
@@ -40,21 +40,21 @@ criarTarefa = do
   let tagsLista = words tagStr
   return (Tarefa (read idStr) desc (read stat) (read prio) (read cat) prazo tagsLista)
 
-existeId :: Int -> [Tarefa] -> Bool
+existeId :: Int -> [Tarefa] -> Bool --Confere se tarefa já é existente
 existeId ident xs = any (\x -> idTarefa x == ident) xs
 
-adicionaTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa]
+adicionaTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa] --Adiciona uma tarefa
 adicionaTarefa ident tarefas
   |existeId (idTarefa ident) tarefas = Left "Erro -> tarefa já existe!!"
   |otherwise = Right (ident : tarefas)  
 
-removerTarefa :: Int -> [Tarefa] -> Either String [Tarefa]
+removerTarefa :: Int -> [Tarefa] -> Either String [Tarefa] --Remove uma tarefa
 removerTarefa ident tarefas
   | existeId ident tarefas = Right (filter (\t -> idTarefa t /= ident) tarefas)
   | otherwise = Left "Erro -> Tarefa não existe!!!"
 
 
-marcarConcluída :: Int -> [Tarefa] -> Either String [Tarefa]
+marcarConcluída :: Int -> [Tarefa] -> Either String [Tarefa] --Função para marcar como concluída tarefas Pendentes
 marcarConcluída ident tarefas 
     |not (existeId ident tarefas) = Left "Erro -> Tarefa não existe!!"
     |otherwise = Right(map atualizar tarefas)

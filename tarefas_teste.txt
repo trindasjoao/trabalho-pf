@@ -1,1 +1,4 @@
 Tarefa {idTarefa = 45, descricao = "Comprar PS5", status = Pendente, prioridade = Alta, categoria = Outro, prazo = Nothing, tags = ["videogame"]}
+Tarefa {idTarefa = 46, descricao = "Estudar para a prova de Cálculo", status = Pendente, prioridade = Alta, categoria = Estudos, prazo = Just 2025-05-03, tags = ["prova","ufu","matematica"]}
+Tarefa {idTarefa = 47, descricao = "Enviar relatório do estágio", status = Pendente, prioridade = Media, categoria = Trabalho, prazo = Just 2025-05-01, tags = ["estagio","relatorio"]}
+Tarefa {idTarefa = 48, descricao = "Lavar a louça", status = Concluida, prioridade = Baixa, categoria = Pessoal, prazo = Nothing, tags = ["casa","rotina"]}

@@ -1,13 +1,13 @@
 module Main (main) where
 
-import System.IO ( hFlush, stdout )
-import Data.Time.Calendar ( fromGregorian ) 
-import Data.Time.Clock ( UTCTime(utctDay), getCurrentTime )
-import Tipos
+import System.IO ( hFlush, stdout ) --usando hFlush para "limitar" buffer
+import Data.Time.Calendar ( fromGregorian ) --trabalha com datas, o gregorian em específico cria uma data dia/mês/ano
+import Data.Time.Clock ( UTCTime(utctDay), getCurrentTime ) --trata o tempo do sistema, getCurrent pega o horário e dias atuais no sistema
+import Tipos 
 import Funcoes
 import Persistencia
 import Testes
-import Text.Read (readMaybe)
+import Text.Read (readMaybe) --leitura SEGURA de strings para tipos como Int
 
 main :: IO ()
 main = do

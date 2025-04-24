@@ -51,7 +51,7 @@ Após isso feito, inicie o programa e crie tarefas com a opção do menu 1, a ma
 
 ## Autores 
     João Pedro Trindade Melo - 12411BCC084 
-    Maria Clara -  
+    Maria Clara -  12411BCC106
     Kaio Phelipe Silva Machado - 12421BCC058
 
 ## Licença 
